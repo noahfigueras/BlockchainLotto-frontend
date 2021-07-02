@@ -1,7 +1,41 @@
-import logo from './logo.svg';
+import { useState } from 'react';
+import { ethers } from 'ethers';
 import './App.css';
 
+import Lottery from '../artifacts/Lottery.json';
+
+//localhost
+const lotteryAddress = '';
+
+//Move this to context
+const provider = new ethers.providers.Web3Provider(window.ethereum);
+const contract = new ethers.Contract(lotteryAddress, Lottery.abi, provider);
+
+//Show Metamask for users
+async function requestAccount() {
+    try{
+        await window.ethereum.request({method: 'eth_requestAccounts'});
+    } catch(err) {
+        console.log('error');
+        console.error(error);
+
+        alert('Login to Metamask first');
+    }
+}
+
 function App() {
+    
+    async function getLotteryPrice() {
+        if(typeof window.ethereum !== 'undefined'){
+            try{
+                const data = await contract.price();
+                console.log('Data: ', data);
+            } catch(err) {
+                console.log('Error: ', err);
+            }    
+        }
+    }
+
   return (
     <div className="App">
       <header className="App-header">
